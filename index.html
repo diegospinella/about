@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diego Spinella — Integration Architect & Tech Lead</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0b;
+    --bg-2: #111113;
+    --bg-3: #18181b;
+    --bg-4: #1c1c20;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(255,255,255,0.14);
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --text-muted: #52525b;
+    --accent: #6366f1;
+    --accent-2: #818cf8;
+    --accent-glow: rgba(99,102,241,0.15);
+    --teal: #14b8a6;
+    --teal-dim: rgba(20,184,166,0.1);
+    --font: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,10,11,0.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 60px;
+  }
+  .nav-logo {
+    font-family: var(--mono); font-size: 13px; color: var(--accent-2);
+    letter-spacing: 0.02em;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--text-secondary); text-decoration: none; font-size: 13px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text-primary); }
+
+  /* LAYOUT */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 0 80px;
+    position: relative;
+  }
+  .hero-grid {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%);
+  }
+  .hero-glow {
+    position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 400px; pointer-events: none;
+    background: radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bg-3); border: 1px solid var(--border);
+    border-radius: 100px; padding: 5px 14px;
+    font-size: 12px; color: var(--text-secondary);
+    margin-bottom: 2rem; font-family: var(--mono);
+  }
+  .badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 8px var(--teal);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 600; line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent-2), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: 1.05rem; color: var(--text-secondary);
+    max-width: 560px; margin-bottom: 2.5rem; line-height: 1.8;
+  }
+  .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; border-radius: 8px;
+    font-size: 13px; font-weight: 500;
+    text-decoration: none; transition: all 0.2s; cursor: pointer; border: none;
+  }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+  }
+  .btn-primary:hover { background: var(--accent-2); transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--bg-3); color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 4rem;
+    padding-top: 2rem; border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat-num {
+    font-size: 1.8rem; font-weight: 600;
+    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-family: var(--mono); }
+
+  /* SECTIONS */
+  section { padding: 80px 0; }
+  .section-tag {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    margin-bottom: 1rem; display: block;
+  }
+  .section-title {
+    font-size: 1.8rem; font-weight: 600; letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .section-sub { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 3rem; }
+  .divider { border: none; border-top: 1px solid var(--border); }
+
+  /* ABOUT */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .about-text p { color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.8; }
+  .about-text p:last-child { margin-bottom: 0; }
+  .tech-stack { display: flex; flex-direction: column; gap: 1.5rem; }
+  .stack-group-label {
+    font-size: 11px; font-family: var(--mono); color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 11px; font-family: var(--mono);
+    padding: 4px 10px; border-radius: 5px;
+    border: 1px solid var(--border); color: var(--text-secondary);
+    background: var(--bg-3);
+    transition: all 0.2s;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent-2); }
+  .tag.accent { border-color: rgba(99,102,241,0.3); color: var(--accent-2); background: var(--accent-glow); }
+
+  /* EXPERIENCE */
+  .timeline { position: relative; }
+  .timeline::before {
+    content: ''; position: absolute; left: 0; top: 8px; bottom: 0;
+    width: 1px; background: var(--border);
+  }
+  .exp-item {
+    position: relative; padding-left: 2rem; margin-bottom: 3rem;
+  }
+  .exp-item::before {
+    content: ''; position: absolute; left: -4px; top: 8px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--accent);
+    transition: background 0.2s;
+  }
+  .exp-item:first-child::before { background: var(--accent); }
+  .exp-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+  .exp-role { font-size: 1rem; font-weight: 500; color: var(--text-primary); }
+  .exp-company { font-size: 0.85rem; color: var(--accent-2); margin-top: 2px; }
+  .exp-period {
+    font-size: 11px; font-family: var(--mono); color: var(--text-muted);
+    white-space: nowrap; margin-top: 4px;
+  }
+  .exp-desc {
+    margin-top: 0.75rem; color: var(--text-secondary);
+    font-size: 0.9rem; line-height: 1.8;
+  }
+  .exp-desc ul { padding-left: 1rem; }
+  .exp-desc li { margin-bottom: 4px; }
+  .exp-tech { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 0.75rem; }
+  .exp-tag {
+    font-size: 10px; font-family: var(--mono); padding: 3px 8px;
+    border-radius: 4px; border: 1px solid var(--border);
+    color: var(--text-muted); background: var(--bg-3);
+  }
+
+  /* SKILLS */
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .skill-card {
+    background: var(--bg-2); padding: 1.5rem;
+    transition: background 0.2s;
+  }
+  .skill-card:hover { background: var(--bg-3); }
+  .skill-icon { font-size: 1.3rem; margin-bottom: 0.75rem; }
+  .skill-name { font-size: 0.9rem; font-weight: 500; margin-bottom: 6px; }
+  .skill-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+  /* CONTACT */
+  .contact-box {
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 16px; padding: 3rem;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .contact-box::before {
+    content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 300px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .contact-box h2 { font-size: 1.8rem; font-weight: 600; margin-bottom: 0.75rem; }
+  .contact-box p { color: var(--text-secondary); margin-bottom: 2rem; }
+  .contact-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0;
+    text-align: center;
+    font-size: 12px; color: var(--text-muted); font-family: var(--mono);
+  }
+
+  /* SCROLL ANIMATIONS */
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 700px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2rem; }
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 1.2rem; }
+    .container { padding: 0 1.2rem; }
+    .contact-box { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">diego.spinella</span>
+  <ul class="nav-links">
+    <li><a href="#about">Sobre</a></li>
+    <li><a href="#experience">Experiência</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contato</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="container">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Disponível para projetos &amp; consultoria
+    </div>
+    <h1>Integration Architect<br>&amp; <em>Tech Lead</em></h1>
+    <p class="hero-sub">
+      Mais de 15 anos projetando ecossistemas de integração corporativa e governança de APIs em ambientes de missão crítica — setor financeiro, seguros e tecnologia.
+    </p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn btn-primary">Entre em contato</a>
+      <a href="https://www.linkedin.com/in/diegospinella/" target="_blank" class="btn btn-secondary">LinkedIn →</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">15+</div>
+        <div class="stat-label">Anos de experiência</div>
+      </div>
+      <div>
+        <div class="stat-num">10</div>
+        <div class="stat-label">Grandes organizações</div>
+      </div>
+      <div>
+        <div class="stat-num">4</div>
+        <div class="stat-label">Plataformas de API Management</div>
+      </div>
+      <div>
+        <div class="stat-num">100+</div>
+        <div class="stat-label">APIs governadas</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container fade-in">
+    <span class="section-tag">// sobre</span>
+    <h2 class="section-title">Quem sou</h2>
+    <p class="section-sub">Arquitetura de integração, governança e liderança técnica.</p>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Arquiteto de Integrações e Tech Lead com mais de 15 anos de experiência em Enterprise Integration Architecture, API Management e governança de APIs, atuando em ambientes de missão crítica nos setores financeiro, seguros e tecnologia.</p>
+        <p>Ao longo da carreira, projetei e evolui ecossistemas de integração em organizações como Bradesco, Safra, CNP Seguros e Sompo Seguros, com atuação direta nas principais plataformas de API Management do mercado.</p>
+        <p>Minha atuação cobre o ciclo completo da integração corporativa: desenho arquitetural, definição de padrões, governança, publicação, versionamento, segurança, observabilidade e evolução contínua de APIs e serviços digitais.</p>
+      </div>
+      <div class="tech-stack">
+        <div>
+          <div class="stack-group-label">API Management</div>
+          <div class="tags">
+            <span class="tag accent">IBM API Connect</span>
+            <span class="tag accent">Axway API Gateway</span>
+            <span class="tag accent">Axway Amplify</span>
+            <span class="tag accent">Amazon API Gateway</span>
+            <span class="tag accent">CaApi</span>
+            <span class="tag accent">Wso2</span>
+          </div>
+        </div>
+        <div>
+          <div class="stack-group-label">Integration Platforms</div>
+          <div class="tags">
+            <span class="tag">IBM Integration Bus (v9, v10)</span>
+            <span class="tag">IBM App Connect</span>
+            <span class="tag">Apache Camel</span>
+            <span class="tag">Camunda</span>
+            <span class="tag">Integration Broker</span>
+          </div>
+        </div>
+        <div>
+          <div class="stack-group-label">Padrões &amp; Protocolos</div>
+          <div class="tags">
+            <span class="tag">OpenAPI / Swagger</span>
+            <span class="tag">REST</span>
+            <span class="tag">SOAP</span>
+            <span class="tag">OAuth2</span>
+            <span class="tag">gRPC</span>
+            <span class="tag">WebSockets</span>
+            <span class="tag">XML/JSON</span>
+            <span class="tag">CSV</span>
+          </div>
+        </div>
+        <div>
+          <div class="stack-group-label">DevOps &amp; Automação</div>
+          <div class="tags">
+            <span class="tag">CI/CD</span>
+            <span class="tag">Python</span>
+            <span class="tag">Jenkins</span>
+            <span class="tag">UrbanCode</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container fade-in">
+    <span class="section-tag">// experiência</span>
+    <h2 class="section-title">Trajetória</h2>
+    <p class="section-sub">Atuação em grandes organizações do setor financeiro, educacional e seguros.</p>
+    <div class="timeline">
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <div class="exp-role">Tech Lead | API Management &amp; Integration Architecture</div>
+            <div class="exp-company">Banco Bradesco</div>
+          </div>
+          <div class="exp-period">nov 2025 — atual</div>
+        </div>
+        <div class="exp-desc">
+          <ul>
+            <li>Tech Lead da área de Open APIs, com responsabilidade técnica sobre a plataforma corporativa de API Management e arquitetura de integração.</li>
+            <li>Definição de padrões arquiteturais, diretrizes de design, versionamento, segurança, observabilidade e conformidade regulatória para APIs corporativas.</li>
+            <li>Referência técnica na evolução da plataforma Axway API Gateway, alinhada às iniciativas de Open Finance.</li>
+            <li>Liderança de automações em Python para simplificação de processos operacionais e governança.</li>
+          </ul>
+        </div>
+        <div class="exp-tech">
+          <span class="exp-tag">Axway API Gateway</span>
+          <span class="exp-tag">API Management</span>
+          <span class="exp-tag">Open Finance</span>
+          <span class="exp-tag">Open Insurance</span>
+          <span class="exp-tag">OpenAPI</span>
+          <span class="exp-tag">Python</span>
+          <span class="exp-tag">CI/CD</span>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <div class="exp-role">API Management Specialist | Tech Lead</div>
+            <div class="exp-company">Safra</div>
+          </div>
+          <div class="exp-period">jun 2022 — nov 2025 · 3a 6m</div>
+        </div>
+        <div class="exp-desc">
+          <ul>
+            <li>Especialista em API Management na equipe de Arquitetura Corporativa, responsável pela estratégia de governança de APIs.</li>
+            <li>Orientação de squads na adoção de padrões OpenAPI e boas práticas de design, documentação e versionamento.</li>
+            <li>Modernização da arquitetura de integração com Axway Amplify e Amazon API Gateway.</li>
+            <li>Implementação de pipelines CI/CD e automações operacionais.</li>
+          </ul>
+        </div>
+        <div class="exp-tech">
+          <span class="exp-tag">Axway Amplify</span>
+          <span class="exp-tag">Amazon API Gateway</span>
+          <span class="exp-tag">Open Finance</span>
+          <span class="exp-tag">Open Insurance</span>
+          <span class="exp-tag">OpenAPI</span>
+          <span class="exp-tag">CI/CD</span>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <div class="exp-role">Senior Integration Architect | API Management</div>
+            <div class="exp-company">CNP Seguros Holding Brasil</div>
+          </div>
+          <div class="exp-period">nov 2019 — mai 2022 · 2a 7m</div>
+        </div>
+        <div class="exp-desc">
+          <ul>
+            <li>Arquitetura, documentação e governança de APIs corporativas em projetos de transformação digital.</li>
+            <li>Evolução do ecossistema de integração com IBM Integration Bus, IBM App Connect e IBM API Connect.</li>
+            <li>Atuação consultiva junto a times de desenvolvimento em decisões técnicas e estratégias de integração.</li>
+          </ul>
+        </div>
+        <div class="exp-tech">
+          <span class="exp-tag">IBM API Connect</span>
+          <span class="exp-tag">IBM Integration Bus v9 e v10</span>
+          <span class="exp-tag">IBM App Connect</span>
+          <span class="exp-tag">OpenAPI</span>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <div class="exp-role">Integration Architect | Senior Integration Consultant</div>
+            <div class="exp-company">Certsys Tecnologia da Informação</div>
+          </div>
+          <div class="exp-period">nov 2016 — out 2019 · 3a</div>
+        </div>
+        <div class="exp-desc">
+          <ul>
+            <li>Projetos de integração para grandes organizações dos setores financeiro, seguros, indústria e saúde.</li>
+            <li>Integrações com Salesforce, SAP, Java e sistemas legados via IBM Integration Bus e API Gateways.</li>
+            <li>Implantação de pipelines CI/CD e automação de deploys com Jenkins e UrbanCode.</li>
+          </ul>
+        </div>
+        <div class="exp-tech">
+          <span class="exp-tag">IBM Integration Bus</span>
+          <span class="exp-tag">IBM App Connect</span>
+          <span class="exp-tag">Apache Camel</span>
+          <span class="exp-tag">Camunda</span>
+          <span class="exp-tag">Salesforce</span>
+          <span class="exp-tag">SAP</span>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <div class="exp-role">Senior Integration Analyst | Middleware Specialist</div>
+            <div class="exp-company">Sompo Seguros</div>
+          </div>
+          <div class="exp-period">mar 2014 — nov 2016 · 2a 9m</div>
+        </div>
+        <div class="exp-desc">
+          <ul>
+            <li>Desenvolvimento e sustentação de integrações entre sistemas estratégicos: Salesforce, SAP, BPM e mobile.</li>
+            <li>Implementação de serviços SOAP e REST, transformação de dados e suporte à modernização tecnológica.</li>
+          </ul>
+        </div>
+        <div class="exp-tech">
+          <span class="exp-tag">IBM Integration Bus v9 e v10</span>
+          <span class="exp-tag">Salesforce</span>
+          <span class="exp-tag">SAP</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container fade-in">
+    <span class="section-tag">// especialidades</span>
+    <h2 class="section-title">O que eu faço</h2>
+    <p class="section-sub">Competências centrais ao longo de 15 anos de atuação.</p>
+    <div class="skills-grid">
+
+      <div class="skill-card">
+        <div class="skill-icon">◈</div>
+        <div class="skill-name">API Management &amp; Governance</div>
+        <div class="skill-desc">Ciclo de vida completo de APIs: design, publicação, versionamento, segurança, observabilidade e conformidade.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">⬡</div>
+        <div class="skill-name">Enterprise Integration Architecture</div>
+        <div class="skill-desc">EAI, ESB, API-led connectivity. Desenho de soluções escaláveis e sustentáveis para ambientes corporativos complexos.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">△</div>
+        <div class="skill-name">Technical Leadership</div>
+        <div class="skill-desc">Referência técnica para squads e áreas de negócio. Revisões arquiteturais, diretrizes e mentoria técnica.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">◎</div>
+        <div class="skill-name">Open Finance / Open Banking</div>
+        <div class="skill-desc">Governança e conformidade regulatória de APIs em iniciativas de Open Finance no setor bancário.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">⊞</div>
+        <div class="skill-name">DevSecOps &amp; CI/CD</div>
+        <div class="skill-desc">Automação de pipelines, deploys, qualidade de entrega e segurança integrada ao ciclo de desenvolvimento.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">⟡</div>
+        <div class="skill-name">Python Automation</div>
+        <div class="skill-desc">Scripts e automações para simplificação de processos operacionais e fortalecimento de controles de governança.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container fade-in">
+    <div class="contact-box">
+      <span class="section-tag" style="display:block; margin-bottom:1rem;">// contato</span>
+      <h2>Vamos conversar?</h2>
+      <p>Aberto a discussões sobre arquitetura, liderança técnica e integração corporativa.</p>
+      <div class="contact-links">
+        <a href="https://www.linkedin.com/in/diegospinella/" target="_blank" class="btn btn-primary">LinkedIn</a>
+        <a href="mailto:diego.spinella@gmail.com" class="btn btn-secondary">E-mail</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span>© 2026 Diego Spinella — Integration Architect &amp; Tech Lead</span>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
